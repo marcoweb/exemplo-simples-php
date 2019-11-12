@@ -1,5 +1,6 @@
 <?php
 require_once '../library/database.php';
+require_once '../library/files.php';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     $titulo = $_POST['titulo'];
@@ -13,8 +14,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if($titulo != '' && $genero != '') {
         $dbConnection = getDbConnection();
-        $command = $dbConnection->prepare('INSERT INTO jogos(titulo, generos_id) VALUES (:titulo, :genero)');
-        $command->execute([':titulo' => $titulo, ':genero' => $genero]);
+        $file = fileUpload('images', 'imagem');
+        $command = $dbConnection->prepare('INSERT INTO jogos(titulo, generos_id, imagem) VALUES (:titulo, :genero, :imagem)');
+        $command->execute([':titulo' => $titulo, ':genero' => $genero, ':imagem' => $file]);
         $jogo_id = $dbConnection->lastInsertId();
         foreach($plataformas as $p) {
             $dbConnection = getDbConnection();
@@ -42,7 +44,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     </head>
     <body>
         <h1>Novo Jogo</h1>
-        <form action="/jogos/insert.php" method="post">
+        <form action="/jogos/insert.php" method="post" enctype="multipart/form-data">
             <label for="nome">Título</label>
             <input type="text" name="titulo" />
             <label for="genero">Gênero</label>
@@ -55,6 +57,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php foreach($plataformas as $p): ?>
                 <input type="checkbox" name="plataforma-<?= $p['id'] ?>" value="<?= $p['id'] ?>" id="<?= $p['id'] ?>" /><?= $p['nome'] ?>
             <?php endforeach ?>
+            <label for="imagem">Imagem</label>
+            <input type="file" name="imagem" id="fileToUpload">
             <button type="submit">Salvar</button>
         </form>
     </body>

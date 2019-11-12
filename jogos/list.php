@@ -32,6 +32,7 @@ for($i = 0;$i < count($jogos);$i++) {
                 <th>Título</th>
                 <th>Gênero</th>
                 <th>Plataformas</th>
+                <th></th>
                 <th>&nbsp;</th>
             <tr>
             <?php foreach($jogos as $j): ?>
@@ -44,6 +45,9 @@ for($i = 0;$i < count($jogos);$i++) {
                     <?= $j['plataformas'][$i]['nome'] ?>
                     <?php endfor ?>
                 </td>
+                <th>
+                    <img width="100px" src="<?= $j['imagem'] ?>" />
+                </th>
                 <td>
                     <a href="/jogos/update.php?id=<?= $j['id'] ?>">Editar</a>
                     <a href="/jogos/delete.php?id=<?= $j['id'] ?>">Remover</a>
